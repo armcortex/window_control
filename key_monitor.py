@@ -25,13 +25,13 @@ class KeyTask(threading.Thread):
                 key_set.add(key)
 
                 if all(k in key_set for k in COMBINATION_LEFT):
-                    print('Trigger: left')
+                    # print('Trigger: left')
                     self.queue.put('LEFT')
                 elif all(k in key_set for k in COMBINATION_MID):
-                    print('Trigger: mid')
+                    # print('Trigger: mid')
                     self.queue.put('MID')
                 elif all(k in key_set for k in COMBINATION_RIGHT):
-                    print('Trigger: right')
+                    # print('Trigger: right')
                     self.queue.put('RIGHT')
 
             # if key == Key.esc:

@@ -1,11 +1,12 @@
 import threading
 import subprocess
-import time
 from screeninfo import get_monitors
 
+cmd_name = 'xdotool getwindowfocus getwindowname'
 cmd_focus = 'xdotool getwindowfocus'
-cmd_move = 'xdotool windowmove {} {} {}'
-cmd_resize = 'xdotool windowsize {} {} {}'
+cmd_move = 'xdotool windowmove --sync {} {} {}'
+cmd_resize = 'xdotool windowsize --sync {} {} {}'
+
 
 class ControlTask(threading.Thread):
     def __init__(self, queue):
@@ -16,7 +17,6 @@ class ControlTask(threading.Thread):
     def run_cmd(self, cmd):
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         out, err = proc.communicate()
-        time.sleep(0.01)
         return out.decode().strip()
 
     def run(self):
@@ -34,14 +34,16 @@ class ControlTask(threading.Thread):
             if dir_cmd is None:
                 return
             else:
-                offset_x = 65       # tool bar size
+                # tool bar size
+                offset_x = 65
+                offset_y = 26
 
                 # Get window id
                 focus = self.run_cmd(cmd_focus)
 
                 # move and resize
                 pos_x, pos_y = 0, 0
-                size_x, size_y = 0, height
+                size_x, size_y = 0, height - offset_y
                 if dir_cmd == 'LEFT':
                     pos_x = 0
                     size_x = int(width / 4) - offset_x
@@ -57,7 +59,7 @@ class ControlTask(threading.Thread):
                 # must run resize command first then move command
                 self.run_cmd(cmd_resize.format(focus, size_x, size_y))
                 self.run_cmd(cmd_move.format(focus, pos_x, pos_y))
-                # self.run_cmd(cmd_move.format(focus, pos_x, pos_y))
-                # self.run_cmd(cmd_resize.format(focus, size_x, size_y))
 
-                print('Pos x: {} y: {}, Size x: {} y: {}'.format(pos_x, pos_y, size_x, size_y))
+                window_name = self.run_cmd(cmd_name)
+                print('Pos x: {} y: {}, Size x: {} y: {} \t {}'
+                      .format(pos_x, pos_y, size_x, size_y, window_name))

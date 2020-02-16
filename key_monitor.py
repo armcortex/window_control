@@ -12,7 +12,6 @@ COMBINATION_RIGHT = {Key.cmd, Key.ctrl, Key.alt, Key.right}
 key_set = set()
 
 
-# def key_task():
 class KeyTask(threading.Thread):
     def __init__(self, queue):
         threading.Thread.__init__(self)
@@ -25,17 +24,11 @@ class KeyTask(threading.Thread):
                 key_set.add(key)
 
                 if all(k in key_set for k in COMBINATION_LEFT):
-                    # print('Trigger: left')
                     self.queue.put('LEFT')
                 elif all(k in key_set for k in COMBINATION_MID):
-                    # print('Trigger: mid')
                     self.queue.put('MID')
                 elif all(k in key_set for k in COMBINATION_RIGHT):
-                    # print('Trigger: right')
                     self.queue.put('RIGHT')
-
-            # if key == Key.esc:
-            #     listener.stop()
 
         def on_release(key):
             try:

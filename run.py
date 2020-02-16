@@ -3,7 +3,6 @@ from key_monitor import KeyTask
 from controller import ControlTask
 
 
-
 def main():
     threads = []
     q = Queue()
@@ -16,7 +15,7 @@ def main():
     t2.start()
     threads.append(t2)
 
-    # Start all thread
+    # Start all threads
     for thread in threads:
         thread.join()
 
